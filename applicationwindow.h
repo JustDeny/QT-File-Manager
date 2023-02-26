@@ -12,6 +12,7 @@
 
 #include "controller.h"
 #include "customfilesystemmodel.h"
+#include "headermodel.h"
 
 
 class ApplicationWindow : public QMainWindow
@@ -33,5 +34,6 @@ private:
     QWidget* central_widget;
     CustomModel* fsModel;
     Controller* controller;
+    HeaderModel* headerModel;
 };
 #endif // APPLICATIONWINDOW_H

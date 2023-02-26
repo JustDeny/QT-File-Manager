@@ -1,7 +1,7 @@
 #include "controller.h"
 
-Controller::Controller():
-    fsModel(new QFileSystemModel())
+
+
+void Controller::MoveToPath(const QString& new_path)
 {
-    //fsModel->setRootPath("/bin");
 }

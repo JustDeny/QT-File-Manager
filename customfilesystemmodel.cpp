@@ -1,10 +1,11 @@
 #include "customfilesystemmodel.h"
+#include <iostream>
 
 
 CustomModel::CustomModel():
     icon_provider(new QFileIconProvider)
 {
-    currentPath = "/bin";//QDir().homePath();
+    currentPath = QDir::currentPath();
     list = QDir(currentPath).entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
 }
 
@@ -21,73 +22,12 @@ int CustomModel::columnCount(const QModelIndex &parent) const
 QVariant CustomModel::data(const QModelIndex &index, int role) const
 {
     const auto &target = list.at(index.row());
-//    switch(index.column())
-//    {
-//    case 0:{
-//        if(role == Qt::DecorationRole){
-//            return QVariant(icon_provider->icon(target));
-//        }
-//        else if(role == Qt::DisplayRole){
-//            if(target.isDir())
-//                return QVariant(target.fileName());
-//            else
-//                return QVariant(target.completeBaseName());
-//        }
-//        break;
-//    }
-//    case 1:
-//        return QVariant(target.suffix());
-//        break;
-//    case 2:
-//        return QVariant(target.birthTime().toString());
-//        break;
-//    default:
-//        return QVariant();
-//        break;
-//    }
-//    switch(role){
-//    case Qt::DecorationRole:
-//        if(index.column()==0)
-//            return QVariant(icon_provider->icon(target));
-//        break;
-//    case Qt::DisplayRole:{
-//        switch(index.column())
-//        {
-//        case 0:
-//            if(target.isDir())
-//                return QVariant(target.fileName());
-//            else
-//                return QVariant(target.completeBaseName());
-//        case 1:
-//            return QVariant(target.suffix());
-//        case 2:
-//            return QVariant(target.birthTime().toString());
-//        }
-//    }
-//    default:
-//        return QVariant();
-//    }
 
     if(role == Qt::DecorationRole && index.column() == 0 )
     {
         return QVariant(icon_provider->icon(target));
     }
     else if(role == Qt::DisplayRole){
-//        if(index.column()==0)
-//        {
-//            if(target.isDir())
-//                return QVariant(target.fileName());
-//            else
-//                return QVariant(target.completeBaseName());
-//        }
-//        else if(index.column() ==1)
-//        {
-//            return QVariant(target.suffix());
-//        }
-//        else if(index.column() ==2)
-//        {
-//            return QVariant(target.birthTime().toString());
-//        }
         switch(index.column())
         {
         case 0:
@@ -104,5 +44,24 @@ QVariant CustomModel::data(const QModelIndex &index, int role) const
         }
     }
     return QVariant();
-
 }
+
+const QString &CustomModel::getCurrentPath() const
+{
+    return currentPath;
+}
+
+void CustomModel::setCurrentPath(const QString &newCurrentPath)
+{
+    QDir newDir(newCurrentPath);
+    currentPath = newCurrentPath;
+    uint newEntriesCount = newDir.count()-2;     //counting without parent and current dirs
+    beginRemoveRows(QModelIndex(),0,list.size()-1);
+    endRemoveRows();
+    int row_count1 = rowCount(QModelIndex());
+    beginInsertRows(QModelIndex(), 0, newEntriesCount-1);
+    list = newDir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
+    int row_count2 = rowCount(QModelIndex());
+    endInsertRows();
+}
+

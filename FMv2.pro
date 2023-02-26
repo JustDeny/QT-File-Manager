@@ -12,12 +12,14 @@ SOURCES += \
     applicationwindow.cpp \
     controller.cpp \
     customfilesystemmodel.cpp \
+    headermodel.cpp \
     main.cpp
 
 HEADERS += \
     applicationwindow.h \
     controller.h \
-    customfilesystemmodel.h
+    customfilesystemmodel.h \
+    headermodel.h
 
 FORMS +=
 
