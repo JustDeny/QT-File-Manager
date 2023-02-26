@@ -1,6 +1,8 @@
 #include "applicationwindow.h"
 
+#include <QDesktopServices>
 #include <QDir>
+#include <QHeaderView>
 
 
 ApplicationWindow::ApplicationWindow(QWidget *parent)
@@ -24,14 +26,34 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     this->setCentralWidget(central_widget);
     leftTable->setModel(controller->leftFileSysModel);
     rightTable->setModel(controller->rightFileSysModel);
+    rightTable->verticalHeader()->setVisible(false);
+    leftTable->verticalHeader()->setVisible(false);
+    leftTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    rightTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(quit, &QAction::triggered, qApp, QApplication::quit);
     connect(leftInput,&QLineEdit::returnPressed,this,[this](){controller->leftFileSysModel->setCurrentPath(leftInput->text());});
     connect(rightInput,&QLineEdit::returnPressed,this,[this](){controller->rightFileSysModel->setCurrentPath(rightInput->text());});
+    connect(leftTable,&QTableView::doubleClicked,this,
+            [this](QModelIndex index){handleCellDoubleClick(index.row(),controller->leftFileSysModel, leftInput);});
+    connect(rightTable,&QTableView::doubleClicked,this,
+            [this](QModelIndex index){handleCellDoubleClick(index.row(),controller->rightFileSysModel, rightInput);});
 }
 
 ApplicationWindow::~ApplicationWindow()
 {
 
+}
+
+void ApplicationWindow::handleCellDoubleClick(int row, CustomModel* fsModel, QLineEdit* currentPath)
+{
+    const auto& entry = fsModel->getList().at(row);
+    if(entry.isDir()){
+         fsModel->setCurrentPath(entry.absoluteFilePath());
+         currentPath->setText(fsModel->getCurrentPath());
+    }
+    else{
+        QDesktopServices::openUrl(QUrl::fromLocalFile(entry.absoluteFilePath()));
+    }
 }
 

@@ -22,7 +22,8 @@ class ApplicationWindow : public QMainWindow
 public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
-
+public slots:
+    void handleCellDoubleClick(int row, CustomModel* fsModel, QLineEdit* currentPath);
 private:
     QGridLayout *grid;
     QMenu* fileMenu;

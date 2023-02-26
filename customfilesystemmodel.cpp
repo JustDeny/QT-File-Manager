@@ -21,27 +21,29 @@ int CustomModel::columnCount(const QModelIndex &parent) const
 
 QVariant CustomModel::data(const QModelIndex &index, int role) const
 {
-    const auto &target = list.at(index.row());
-
-    if(role == Qt::DecorationRole && index.column() == 0 )
-    {
-        return QVariant(icon_provider->icon(target));
-    }
-    else if(role == Qt::DisplayRole){
-        switch(index.column())
-        {
-        case 0:
-            if(target.isDir())
-                return QVariant(target.fileName());
-            else
-                return QVariant(target.completeBaseName());
-        case 1:
-            if(!target.isDir())
-                return QVariant(target.suffix());
-            break;
-        case 2:
-            return QVariant(target.birthTime().toString());
+    if(index.isValid()){
+        const auto& target = list.at(index.row());
+        if(role == Qt::DisplayRole){
+            switch(index.column())
+            {
+            case 0:
+                if(target.isDir())
+                    return target.fileName();
+                else
+                    return target.completeBaseName();
+            case 1:
+                if(!target.isDir())
+                    return target.suffix();
+                break;
+            case 2:
+                return target.birthTime().toString();
+            }
         }
+        else if(role == Qt::DecorationRole && index.column() == 0 )
+        {
+            return icon_provider->icon(target);
+        }
+
     }
     return QVariant();
 }
@@ -63,5 +65,10 @@ void CustomModel::setCurrentPath(const QString &newCurrentPath)
     list = newDir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries);
     int row_count2 = rowCount(QModelIndex());
     endInsertRows();
+}
+
+const QFileInfoList &CustomModel::getList() const
+{
+    return list;
 }
 
