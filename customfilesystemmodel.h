@@ -1,9 +1,23 @@
 #ifndef CUSTOMFILESYSTEMMODEL_H
 #define CUSTOMFILESYSTEMMODEL_H
 
-#include <QFileSystemModel>
+
 #include <QFileIconProvider>
 #include <QStandardItemModel>
+
+//enum class containing measures in bytes
+enum class Measures:int64_t
+{
+    KILOBYTE = 1024,
+    MEGABYTE = 1048576,
+    GIGABYTE = 1073741824,
+    TERABYTE = 1099511627776
+
+};
+
+bool operator>=(const float lhs, const Measures rhs);
+float& operator/=(float& lhs, const Measures rhs);
+
 
 class CustomModel: public QAbstractTableModel
 {

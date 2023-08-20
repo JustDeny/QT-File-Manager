@@ -3,6 +3,8 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QHeaderView>
+#include <QUrl>
+#include <QFileSystemModel>
 
 
 ApplicationWindow::ApplicationWindow(QWidget *parent)
@@ -24,8 +26,8 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     grid->addWidget(rightTable, 1,1);
     central_widget->setLayout(grid);
     this->setCentralWidget(central_widget);
-    leftTable->setModel(controller->leftFileSysModel);
-    rightTable->setModel(controller->rightFileSysModel);
+    leftTable->setModel(controller->leftHeaderModel);
+    rightTable->setModel(controller->rightHeaderModel);
     rightTable->verticalHeader()->setVisible(false);
     leftTable->verticalHeader()->setVisible(false);
     leftTable->setSelectionBehavior(QAbstractItemView::SelectRows);

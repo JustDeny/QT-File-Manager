@@ -8,7 +8,6 @@
 #include <QMenuBar>
 #include <QApplication>
 #include <QTableView>
-#include <QFileSystemModel>
 
 #include "controller.h"
 #include "customfilesystemmodel.h"
@@ -17,8 +16,6 @@
 
 class ApplicationWindow : public QMainWindow
 {
-
-
 public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();

@@ -1,6 +1,19 @@
 #include "customfilesystemmodel.h"
 #include <iostream>
+#include <QDateTime>
+#include <QFileSystemModel>
+#include <type_traits>
 
+bool operator>=(const float lhs, const Measures rhs)
+{
+    return lhs>=static_cast<float>(rhs);
+
+}
+float& operator/=(float& lhs, const Measures rhs)
+{
+    lhs = lhs / static_cast<float>(rhs);
+    return lhs;
+}
 
 CustomModel::CustomModel():
     icon_provider(new QFileIconProvider)
@@ -37,6 +50,34 @@ QVariant CustomModel::data(const QModelIndex &index, int role) const
                 break;
             case 2:
                 return target.birthTime().toString();
+            case 3:
+            {
+                float fileSize = target.size();
+                QString measure = "B";
+                //if size is greater than 1000 bytes, we'll convert it in corresponding measures
+                if(fileSize >= Measures::TERABYTE)
+                {
+                    measure = "Tb";
+                    fileSize /= Measures::TERABYTE;
+                }
+                else if(fileSize >= Measures::GIGABYTE)
+                {
+                    measure = "Gb";
+                    fileSize /= Measures::GIGABYTE;
+                }
+                else if(fileSize >= Measures::MEGABYTE)
+                {
+                    measure = "Mb";
+                    fileSize /= Measures::MEGABYTE;
+                }
+                else if(fileSize >= Measures::KILOBYTE)
+                {
+                    measure = "Kb";
+                    fileSize /= Measures::KILOBYTE;
+                }
+                return QString(QString::number(fileSize,'f',2)+measure);
+            }
+                break;
             }
         }
         else if(role == Qt::DecorationRole && index.column() == 0 )
